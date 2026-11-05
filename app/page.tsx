@@ -1,11 +1,12 @@
+import { Suspense } from 'react';
 import { ProductSection } from "@/components/ProductSection";
-
-export const dynamic = 'force-dynamic';
 
 export default function Home() {
   return (
     <main>
-      <ProductSection />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ProductSection />
+      </Suspense>
     </main>
   );
 }
