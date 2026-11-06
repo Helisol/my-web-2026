@@ -5,7 +5,7 @@ export type Product = {
   name: string;
   description: string;
   price: number;
-  category?: string;
+  category?:string
   image_url?: string;
 };
 
@@ -35,4 +35,4 @@ export async function getProducts() {
       source: "offline" 
     };
   }
-} 
+}
