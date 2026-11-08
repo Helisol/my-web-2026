@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "black-forest-labs/FLUX.1-schnell",
+       model: "black-forest-labs/FLUX.1-schnell",
         prompt: `fashion clothing design, professional product photography, ${prompt}, high quality, 4k`,
         image_size: "1024x1024",
         batch_size: 1
