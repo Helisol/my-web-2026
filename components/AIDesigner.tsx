@@ -21,11 +21,11 @@ export function AIDesigner() {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
-
+} catch (error: any) {
+  alert("报错详情: " + (error.message || "未知错误"));
+} finally {
       setImageUrl(data.imageUrl);
-    } catch (error) {
-      alert("AI is busy, please try again later.");
-    } finally {
+    
       setIsGenerating(false);
     }
   };
