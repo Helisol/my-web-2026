@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         // 换成了通义万相模型，目前非常稳定
-        model: "Qwen/Qwen-Image", 
+        model: "Kwai-Kolors/Kolors", 
         prompt: `fashion clothing design, professional product photography, ${prompt}, high quality, 4k`,
         image_size: "1024x1024",
         batch_size: 1
