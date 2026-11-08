@@ -15,11 +15,12 @@ export async function POST(req: Request) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        // 换成了通义万相模型，目前非常稳定
-        model: "Kwai-Kolors/Kolors", 
-        prompt: `fashion clothing design, professional product photography, ${prompt}, high quality, 4k`,
-        image_size: "1024x1024",
-        batch_size: 1
+  // 换成官方完整的模型ID
+  model: "Kwai-Kolors/Kolors", 
+  prompt: `fashion clothing design, professional product photography, ${prompt}, high quality, 4k`,
+  image_size: "1024x1024",
+  batch_size: 1
+})
       })
     });
 
