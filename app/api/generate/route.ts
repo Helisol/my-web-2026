@@ -15,7 +15,8 @@ export async function POST(req: Request) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-       model: "black-forest-labs/FLUX.1-schnell",
+        // 换成了通义万相模型，目前非常稳定
+        model: "Qwen/Qwen-Image", 
         prompt: `fashion clothing design, professional product photography, ${prompt}, high quality, 4k`,
         image_size: "1024x1024",
         batch_size: 1
@@ -25,7 +26,8 @@ export async function POST(req: Request) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || "Failed to generate image");
+      // 之前没拿到真实错误，现在把 error 字段也抓出来
+      throw new Error(data.error || data.message || "Failed to generate image");
     }
 
     return NextResponse.json({ imageUrl: data.images[0].url });
