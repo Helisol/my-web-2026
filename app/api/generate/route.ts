@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "Kwai-Kolors/Kolors", 
+        model: "Kwai-Kolors/Kolors",
         prompt: prompt, 
         image_size: "1024x1024",
         batch_size: 1
