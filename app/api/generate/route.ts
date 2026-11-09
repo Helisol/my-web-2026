@@ -15,26 +15,24 @@ export async function POST(req: Request) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-  // 换成官方完整的模型ID
-  model: "Kwai-Kolors/Kolors", 
-  prompt: `fashion clothing design, professional product photography, ${prompt}, high quality, 4k`,
-  image_size: "1024x1024",
-  batch_size: 1
-})
+        model: "black-forest-labs/FLUX.1-schnell", 
+        prompt: prompt, 
+        image_size: "1024x1024",
+        batch_size: 1
       })
     });
 
     const data = await response.json();
 
+    // 如果 API 报错，直接把 API 的原话抛出来
     if (!response.ok) {
-      // 之前没拿到真实错误，现在把 error 字段也抓出来
-      throw new Error(data.error || data.message || "Failed to generate image");
+      throw new Error(data.message || data.error || JSON.stringify(data));
     }
 
     return NextResponse.json({ imageUrl: data.images[0].url });
 
   } catch (error: any) {
-    console.error("AI Generation Error:", error);
+    console.error("后端报错:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
