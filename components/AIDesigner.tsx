@@ -1,11 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+// 初始化 Supabase 客户端（为了能把留言存进数据库）
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export function AIDesigner() {
   const [prompt, setPrompt] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // 弹窗和表单状态
+  const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", company: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const generateDesign = async () => {
     if (!prompt.trim()) return;
@@ -19,22 +30,53 @@ export function AIDesigner() {
         body: JSON.stringify({ prompt }),
       });
 
-      // 就是这里！刚才这行丢了导致报错！
-      const data = await res.json(); 
-      
-      if (!res.ok) throw new Error(data.error || "Failed to generate image");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
 
       setImageUrl(data.imageUrl);
     } catch (error: any) {
-      // 如果报错，直接把真实原因弹出来
       alert("报错详情: " + (error.message || "未知错误"));
     } finally {
       setIsGenerating(false);
     }
   };
 
+  // 点击获取报价按钮，打开弹窗并自动填入需求
+  const openInquiry = () => {
+    setFormData({ 
+      ...formData, 
+      message: `I am interested in this AI designed item: ${prompt}. Please send me a quotation.` 
+    });
+    setIsInquiryOpen(true);
+  };
+
+  // 提交询盘到数据库
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase.from("inquiries").insert([
+        {
+          message: `Company: ${formData.company}\nAI Design Prompt: ${prompt}\nDetails: ${formData.message}\nEmail: ${formData.email}`,
+          status: "new"
+        }
+      ]);
+
+      if (error) throw error;
+      
+      alert("Inquiry sent successfully! We will contact you soon.");
+      setIsInquiryOpen(false);
+      setFormData({ name: "", email: "", company: "", message: "" });
+    } catch (err) {
+      alert("Failed to send inquiry. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <section className="bg-zinc-900 text-white py-16 px-6">
+    <section className="bg-zinc-900 text-white py-16 px-6 relative">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl md:text-5xl font-serif mb-4">Custom Your Own Design</h2>
         <p className="text-zinc-400 mb-8 text-sm md:text-base">
@@ -71,14 +113,38 @@ export function AIDesigner() {
           )}
         </div>
         
+        {/* 按钮改成触发弹窗 */}
         {imageUrl && (
           <div className="mt-8">
-             <a href=" " className="inline-block bg-teal-500 text-white px-8 py-3 rounded-full font-medium hover:bg-teal-400 transition">
+             <button onClick={openInquiry} className="inline-block bg-teal-500 text-white px-8 py-3 rounded-full font-medium hover:bg-teal-400 transition">
                Love it? Contact us for a quote
-             </a >
+             </button>
           </div>
         )}
       </div>
+
+      {/* AI 专属询盘弹窗 */}
+      {isInquiryOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl text-black text-left">
+            <div className="mb-4 flex items-center justify-between border-b pb-4">
+              <h2 className="text-xl font-semibold">Request a Quote</h2>
+              <button onClick={() => setIsInquiryOpen(false)} className="text-zinc-400 hover:text-black">✕</button>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <input required type="text" placeholder="Your Name" className="w-full rounded-lg border p-3 text-sm focus:ring-1" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+              <input required type="email" placeholder="Business Email" className="w-full rounded-lg border p-3 text-sm focus:ring-1" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+              <input required type="text" placeholder="Company Name" className="w-full rounded-lg border p-3 text-sm focus:ring-1" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} />
+              <textarea required rows={3} placeholder="Your Requirements..." className="w-full rounded-lg border p-3 text-sm focus:ring-1" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} />
+              
+              <button disabled={isSubmitting} type="submit" className="mt-2 w-full rounded-full bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 disabled:bg-zinc-400">
+                {isSubmitting ? "Sending..." : "Submit Inquiry"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
