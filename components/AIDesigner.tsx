@@ -19,14 +19,16 @@ export function AIDesigner() {
         body: JSON.stringify({ prompt }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Something went wrong");
-} catch (error: any) {
-  // 直接弹出后端的真实报错
-  alert("错误原因: " + (error.message || "未知错误"));
-} finally {
+      // 就是这里！刚才这行丢了导致报错！
+      const data = await res.json(); 
+      
+      if (!res.ok) throw new Error(data.error || "Failed to generate image");
+
       setImageUrl(data.imageUrl);
-    
+    } catch (error: any) {
+      // 如果报错，直接把真实原因弹出来
+      alert("报错详情: " + (error.message || "未知错误"));
+    } finally {
       setIsGenerating(false);
     }
   };
