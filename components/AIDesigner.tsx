@@ -22,7 +22,8 @@ export function AIDesigner() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong");
 } catch (error: any) {
-  alert("报错详情: " + (error.message || "未知错误"));
+  // 直接弹出后端的真实报错
+  alert("错误原因: " + (error.message || "未知错误"));
 } finally {
       setImageUrl(data.imageUrl);
     
