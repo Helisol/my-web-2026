@@ -60,59 +60,56 @@ export function AIDesigner() {
   };
 
   return (
-    <section className="bg-white text-black py-16 px-6 relative">
-      <div className="max-w-3xl mx-auto text-center">
-        <h2 className="text-3xl md:text-5xl font-serif mb-4">Custom Your Own Design</h2>
-        <p className="text-zinc-600 mb-8 text-sm md:text-base">
-          Tell us your idea, our AI will bring it to life. Need samples? Send us an inquiry!
-        </p >
+    <section style={{ backgroundColor: '#ffffff', padding: '64px 24px' }}>
+      <div style={{ maxWidth: '768px', margin: '0 auto', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '36px', marginBottom: '16px', fontWeight: 'bold', color: '#000000' }}>Custom Your Own Design</h2>
+        <p style={{ color: '#4b5563', marginBottom: '32px' }}>Tell us your idea, our AI will bring it to life. Need samples? Send us an inquiry!</p >
         
-        {/* 彻底改变布局结构，用最原始的 table 布局思维来强制对齐 */}
-        <div className="w-full max-w-xl mx-auto mb-10">
-          <input
-            type="text"
+        <div style={{ maxWidth: '512px', margin: '0 auto 40px' }}>
+          {/* 不用 input 了，直接用 textarea，强行加 8px 黑色边框 */}
+          <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Type your design idea here..."
+            rows={2}
             style={{ 
               backgroundColor: '#ffffff !important', 
               color: '#000000 !important', 
-              border: '4px solid #000000 !important', // 加粗到4像素的边框
+              border: '8px solid #000000 !important', // 8像素的粗黑边框，看你怎么隐身！
               display: 'block !important',
               width: '100% !important', 
-              height: '60px !important', // 强制高度
-              padding: '16px !important', 
-              fontSize: '18px !important',
-              marginBottom: '16px !important',
-              zIndex: 999,
-              position: 'relative'
+              padding: '16px', 
+              fontSize: '18px',
+              marginBottom: '16px',
+              outline: 'none',
+              resize: 'none'
             }}
-            onKeyDown={(e) => e.key === "Enter" && generateDesign()}
           />
           <button
             onClick={generateDesign}
             disabled={isGenerating}
-            className="w-full bg-black text-white px-8 py-4 rounded-xl font-bold text-lg"
+            style={{ backgroundColor: '#000000', color: '#ffffff', width: '100%', padding: '16px', borderRadius: '8px', fontSize: '18px', fontWeight: 'bold' }}
           >
             {isGenerating ? "Generating..." : "Generate Design"}
           </button>
         </div>
 
-        <div className="bg-white border-4 border-dashed border-gray-300 max-w-lg mx-auto aspect-square flex items-center justify-center rounded-2xl">
-          {isGenerating && <div className="text-gray-500">AI is drawing...</div>}
-          {!isGenerating && !imageUrl && <div className="text-gray-400">Your design will appear here</div>}
-          {imageUrl && !isGenerating && < img src={imageUrl} alt="Design" className="w-full h-full object-cover rounded-2xl" />}
+        <div style={{ backgroundColor: '#f3f4f6', border: '4px dashed #9ca3af', maxWidth: '512px', aspectRatio: '1/1', margin: '0 auto', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {isGenerating && <div style={{ color: '#6b7280' }}>AI is drawing...</div>}
+          {!isGenerating && !imageUrl && <div style={{ color: '#9ca3af' }}>Your design will appear here</div>}
+          {imageUrl && !isGenerating && < img src={imageUrl} alt="Design" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} />}
         </div>
         
         {imageUrl && (
-          <div className="mt-8">
-             <button onClick={openInquiry} className="bg-teal-500 text-white px-8 py-3 rounded-full font-medium text-lg">
+          <div style={{ marginTop: '32px' }}>
+             <button onClick={openInquiry} style={{ backgroundColor: '#14b8a6', color: '#ffffff', padding: '12px 32px', borderRadius: '9999px', border: 'none', fontSize: '16px' }}>
                Love it? Contact us for a quote
              </button>
           </div>
         )}
       </div>
 
+      {/* 弹窗 */}
       {isInquiryOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl text-left">
