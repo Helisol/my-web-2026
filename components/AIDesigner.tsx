@@ -12,7 +12,6 @@ export function AIDesigner() {
   const [imageUrl, setImageUrl] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // 弹窗和表单状态
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", company: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,21 +72,31 @@ export function AIDesigner() {
   };
 
   return (
-    <section className="bg-zinc-50 text-zinc-900 py-16 px-6 relative">
+    // 整个区域背景改成纯白色，文字改成深色
+    <section className="bg-white text-zinc-900 py-16 px-6 relative">
       <div className="max-w-3xl mx-auto text-center">
         <h2 className="text-3xl md:text-5xl font-serif mb-4">Custom Your Own Design</h2>
         <p className="text-zinc-600 mb-8 text-sm md:text-base">
           Tell us your idea, our AI will bring it to life. Need samples? Send us an inquiry!
         </p >
         
-        {/* 输入框和按钮：改成垂直排列，强制占满全宽 */}
-        <div className="flex flex-col gap-3 max-w-xl mx-auto mb-10">
+        {/* 输入框和按钮：强制垂直排列 */}
+        <div className="flex flex-col gap-4 max-w-xl mx-auto mb-10">
           <input
             type="text"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="e.g., A vintage denim jacket with tiger embroidery..."
-            className="block w-full p-4 rounded-xl text-black bg-white border-2 border-zinc-300 outline-none focus:border-zinc-800 transition"
+            // 关键：使用 inline style 强制白底黑框
+            style={{ 
+              backgroundColor: '#ffffff', 
+              color: '#000000', 
+              border: '2px solid #9ca3af',
+              width: '100%',
+              padding: '16px',
+              borderRadius: '12px',
+              outline: 'none'
+            }}
             onKeyDown={(e) => e.key === "Enter" && generateDesign()}
           />
           <button
@@ -99,8 +108,20 @@ export function AIDesigner() {
           </button>
         </div>
 
-        {/* 图片展示区：白底灰虚线框 */}
-        <div className="mt-10 max-w-lg mx-auto aspect-square bg-white border-2 border-dashed border-zinc-300 rounded-2xl overflow-hidden flex items-center justify-center relative">
+        {/* 图片展示区：强制白底灰虚线框 */}
+        <div 
+          style={{
+            backgroundColor: '#f9fafb',
+            border: '2px dashed #d1d5db',
+            borderRadius: '16px',
+            maxWidth: '512px',
+            margin: '0 auto',
+            aspectRatio: '1/1',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
           {isGenerating && (
             <div className="text-zinc-500 animate-pulse text-lg">AI is drawing your design...</div>
           )}
@@ -108,7 +129,7 @@ export function AIDesigner() {
             <div className="text-zinc-400 text-sm">Your design will appear here</div>
           )}
           {imageUrl && !isGenerating && (
-            < img src={imageUrl} alt="AI Generated Design" className="w-full h-full object-cover" />
+            < img src={imageUrl} alt="AI Generated Design" className="w-full h-full object-cover rounded-2xl" />
           )}
         </div>
         
