@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-// 初始化 Supabase 客户端（为了能把留言存进数据库）
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -41,7 +40,6 @@ export function AIDesigner() {
     }
   };
 
-  // 点击获取报价按钮，打开弹窗并自动填入需求
   const openInquiry = () => {
     setFormData({ 
       ...formData, 
@@ -50,7 +48,6 @@ export function AIDesigner() {
     setIsInquiryOpen(true);
   };
 
-  // 提交询盘到数据库
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -76,44 +73,46 @@ export function AIDesigner() {
   };
 
   return (
-    <section className="bg-zinc-50 text-zinc-900 py-16 px-6">
-      <div className="max-w-4xl mx-auto text-center">
+    <section className="bg-zinc-50 text-zinc-900 py-16 px-6 relative">
+      <div className="max-w-3xl mx-auto text-center">
         <h2 className="text-3xl md:text-5xl font-serif mb-4">Custom Your Own Design</h2>
-        <p className="text-zinc-400 mb-8 text-sm md:text-base">
+        <p className="text-zinc-600 mb-8 text-sm md:text-base">
           Tell us your idea, our AI will bring it to life. Need samples? Send us an inquiry!
         </p >
         
-        <div className="max-w-2xl mx-auto flex flex-col md:flex-row gap-3">
+        {/* 输入框和按钮：改成垂直排列，强制占满全宽 */}
+        <div className="flex flex-col gap-3 max-w-xl mx-auto mb-10">
           <input
             type="text"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="e.g., A vintage denim jacket with tiger embroidery..."
-            className="w-full flex-1 p-4 rounded-xl text-black bg-gray-200 border-2 border-gray-400 outline-none placeholder-gray-500"
+            className="block w-full p-4 rounded-xl text-black bg-white border-2 border-zinc-300 outline-none focus:border-zinc-800 transition"
             onKeyDown={(e) => e.key === "Enter" && generateDesign()}
           />
           <button
             onClick={generateDesign}
             disabled={isGenerating}
-            className="bg-white text-black px-8 py-4 rounded-xl font-bold hover:bg-gray-200 transition disabled:opacity-50 whitespace-nowrap"
+            className="w-full bg-zinc-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-zinc-800 transition disabled:opacity-50"
           >
             {isGenerating ? "Generating..." : "Generate Design"}
           </button>
         </div>
 
-        <div className="mt-10 max-w-lg mx-auto aspect-square bg-white border border-dashed border-zinc-300 rounded-2xl overflow-hidden flex items-center justify-center relative">
+        {/* 图片展示区：白底灰虚线框 */}
+        <div className="mt-10 max-w-lg mx-auto aspect-square bg-white border-2 border-dashed border-zinc-300 rounded-2xl overflow-hidden flex items-center justify-center relative">
           {isGenerating && (
-            <div className="text-zinc-400 animate-pulse text-lg">AI is drawing your design...</div>
+            <div className="text-zinc-500 animate-pulse text-lg">AI is drawing your design...</div>
           )}
           {!isGenerating && !imageUrl && (
-            <div className="text-zinc-500 text-sm">Your design will appear here</div>
+            <div className="text-zinc-400 text-sm">Your design will appear here</div>
           )}
           {imageUrl && !isGenerating && (
             < img src={imageUrl} alt="AI Generated Design" className="w-full h-full object-cover" />
           )}
         </div>
         
-        {/* 按钮改成触发弹窗 */}
+        {/* 获取报价按钮 */}
         {imageUrl && (
           <div className="mt-8">
              <button onClick={openInquiry} className="inline-block bg-teal-500 text-white px-8 py-3 rounded-full font-medium hover:bg-teal-400 transition">
@@ -123,7 +122,7 @@ export function AIDesigner() {
         )}
       </div>
 
-      {/* AI 专属询盘弹窗 */}
+      {/* 询盘弹窗 */}
       {isInquiryOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl text-black text-left">
