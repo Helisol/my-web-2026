@@ -89,7 +89,7 @@ export function AIDesigner() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="e.g., A vintage denim jacket with tiger embroidery..."
-            className="flex-1 p-4 rounded-xl text-black border border-zinc-300 outline-none"
+            className="w-full flex-1 p-4 rounded-xl text-black bg-gray-200 border-2 border-gray-400 outline-none placeholder-gray-500"
             onKeyDown={(e) => e.key === "Enter" && generateDesign()}
           />
           <button
