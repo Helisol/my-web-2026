@@ -18,12 +18,12 @@ export function ProductCatalog({ products, live }: { products: Product[], live: 
             
             {/* 商品图片 */}
             {item.image_url && (
-               < img src={item.image_url} alt={item.name} style={{ width: '100%', height: '300px', objectFit: 'cover' }} />
+               <img src={item.image_url} alt={item.name} style={{ width: '100%', height: '300px', objectFit: 'cover' }} />
             )}
             
             <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
               <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>{item.name}</h3>
-              <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px', flex: 1 }}>{item.description}</p >
+              <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px', flex: 1 }}>{item.description}</p>
               
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', flexWrap: 'wrap', gap: '10px' }}>
                 <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#000' }}>${item.price} USD</span>
@@ -32,7 +32,9 @@ export function ProductCatalog({ products, live }: { products: Product[], live: 
                 <div style={{ display: 'flex', gap: '8px' }}>
                   {/* 邮件询盘按钮 */}
                   <a 
-                    href= '#000', 
+                    href={`mailto:huliqing70@gmail.com?subject=Inquiry for ${item.name}&body=Hello, I am interested in ${item.name}. Please send me a quotation.`}
+                    style={{ 
+                      backgroundColor: '#000', 
                       color: '#fff', 
                       padding: '8px 16px', 
                       borderRadius: '20px', 
@@ -43,7 +45,7 @@ export function ProductCatalog({ products, live }: { products: Product[], live: 
                     }}
                   >
                     Email Us
-                  </a >
+                  </a>
 
                   {/* WhatsApp 按钮 */}
                   <a 
@@ -62,7 +64,7 @@ export function ProductCatalog({ products, live }: { products: Product[], live: 
                     }}
                   >
                     WhatsApp
-                  </a >
+                  </a>
                 </div>
               </div>
             </div>
