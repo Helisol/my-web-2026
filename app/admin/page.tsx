@@ -48,53 +48,55 @@ export default function AdminDashboard() {
 
   if (isLoading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading Dashboard...</div>;
 
-  // 使用最原始的内联样式，绝对不乱
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>客户询盘管理</h1>
-        <button onClick={handleLogout} style={{ backgroundColor: '#ef4444', color: 'white', padding: '8px 16px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9fafb', minHeight: '100vh' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827' }}>客户询盘管理</h1>
+        <button onClick={handleLogout} style={{ backgroundColor: '#ef4444', color: 'white', padding: '8px 16px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px' }}>
           退出登录
         </button>
       </div>
 
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ddd' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f3f4f6' }}>
-              <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left', width: '150px' }}>时间</th>
-              <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>客户需求详情</th>
-              <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left', width: '150px' }}>状态</th>
-            </tr>
-          </thead>
-          <tbody>
-            {inquiries.map((item) => (
-              <tr key={item.id}>
-                <td style={{ padding: '12px', border: '1px solid #ddd', fontSize: '14px', color: '#666' }}>
-                  {new Date(item.created_at).toLocaleString()}
-                </td>
-                <td style={{ padding: '12px', border: '1px solid #ddd', fontSize: '14px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-                  {item.message}
-                </td>
-                <td style={{ padding: '12px', border: '1px solid #ddd' }}>
-                  <select 
-                    value={item.status || "new"}
-                    onChange={(e) => updateStatus(item.id, e.target.value)}
-                    style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ccc' }}
-                  >
-                    <option value="new">待跟进 (New)</option>
-                    <option value="contacted">已联系 (Contacted)</option>
-                  </select>
-                </td>
-              </tr>
-            ))}
-            {inquiries.length === 0 && (
-              <tr>
-                <td colSpan={3} style={{ padding: '20px', textAlign: 'center' }}>暂无询盘数据</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      {/* 彻底放弃表格，改用 Flex 卡片布局，手机端绝对不竖排 */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {inquiries.map((item) => (
+          <div key={item.id} style={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '16px', border: '1px solid #e5e7eb' }}>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px', flexWrap: 'wrap', gap: '10px' }}>
+              <div style={{ fontSize: '13px', color: '#6b7280', backgroundColor: '#f3f4f6', padding: '4px 8px', borderRadius: '4px' }}>
+                🕒 {new Date(item.created_at).toLocaleString()}
+              </div>
+              
+              <select 
+                value={item.status || "new"}
+                onChange={(e) => updateStatus(item.id, e.target.value)}
+                style={{ 
+                  padding: '6px 12px', 
+                  borderRadius: '20px', 
+                  border: '1px solid #d1d5db', 
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  backgroundColor: item.status === 'contacted' ? '#dcfce7' : '#fee2e2',
+                  color: item.status === 'contacted' ? '#166534' : '#991b1b',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="new">待跟进 (New)</option>
+                <option value="contacted">已联系 (Contacted)</option>
+              </select>
+            </div>
+
+            {/* 这块是文字内容，加了自动换行，手机端绝对不会变成竖条 */}
+            <div style={{ fontSize: '14px', color: '#374151', whiteSpace: 'pre-wrap', wordBreak: 'break-word', lineHeight: '1.6' }}>
+              {item.message}
+            </div>
+
+          </div>
+        ))}
+        {inquiries.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280' }}>暂无询盘数据</div>
+        )}
       </div>
     </div>
   );
