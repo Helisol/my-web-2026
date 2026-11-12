@@ -1,4 +1,4 @@
-."use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -41,67 +41,60 @@ export default function AdminDashboard() {
     router.push("/admin/login");
   };
 
-  // 改成了下拉框选择状态
   const updateStatus = async (id: number, newStatus: string) => {
     await supabase.from("inquiries").update({ status: newStatus }).eq("id", id);
     fetchInquiries(); 
   };
 
-  if (isLoading) return <div className="p-10 text-center">Loading Dashboard...</div>;
+  if (isLoading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading Dashboard...</div>;
 
+  // 使用最原始的内联样式，绝对不乱
   return (
-    <div className="min-h-screen bg-zinc-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-zinc-800">客户询盘管理后台</h1>
-          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">
-            退出登录
-          </button>
-        </div>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>客户询盘管理</h1>
+        <button onClick={handleLogout} style={{ backgroundColor: '#ef4444', color: 'white', padding: '8px 16px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          退出登录
+        </button>
+      </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-zinc-200 overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[800px]">
-            <thead>
-              <tr className="bg-zinc-100 border-b border-zinc-200">
-                <th className="p-4 font-semibold text-zinc-600 w-40">收到时间</th>
-                <th className="p-4 font-semibold text-zinc-600">客户需求详情 (AI / 商品)</th>
-                <th className="p-4 font-semibold text-zinc-600 w-36">跟进状态</th>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ddd' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f3f4f6' }}>
+              <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left', width: '150px' }}>时间</th>
+              <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left' }}>客户需求详情</th>
+              <th style={{ padding: '12px', border: '1px solid #ddd', textAlign: 'left', width: '150px' }}>状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inquiries.map((item) => (
+              <tr key={item.id}>
+                <td style={{ padding: '12px', border: '1px solid #ddd', fontSize: '14px', color: '#666' }}>
+                  {new Date(item.created_at).toLocaleString()}
+                </td>
+                <td style={{ padding: '12px', border: '1px solid #ddd', fontSize: '14px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                  {item.message}
+                </td>
+                <td style={{ padding: '12px', border: '1px solid #ddd' }}>
+                  <select 
+                    value={item.status || "new"}
+                    onChange={(e) => updateStatus(item.id, e.target.value)}
+                    style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ccc' }}
+                  >
+                    <option value="new">待跟进 (New)</option>
+                    <option value="contacted">已联系 (Contacted)</option>
+                  </select>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {inquiries.map((item) => (
-                <tr key={item.id} className="border-b border-zinc-100 hover:bg-zinc-50">
-                  <td className="p-4 text-sm text-zinc-500 whitespace-nowrap">
-                    {new Date(item.created_at).toLocaleString()}
-                  </td>
-                  <td className="p-4 text-sm text-zinc-800 whitespace-pre-wrap break-words">
-                    {item.message}
-                  </td>
-                  <td className="p-4">
-                    {/* 下拉框直接改状态 */}
-                    <select 
-                      value={item.status || "new"}
-                      onChange={(e) => updateStatus(item.id, e.target.value)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium outline-none border cursor-pointer appearance-none ${
-                        item.status === "contacted" 
-                          ? "bg-green-100 text-green-700 border-green-300" 
-                          : "bg-red-100 text-red-700 border-red-300"
-                      }`}
-                    >
-                      <option value="new">待跟进 (New)</option>
-                      <option value="contacted">已联系 (Contacted)</option>
-                    </select>
-                  </td>
-                </tr>
-              ))}
-              {inquiries.length === 0 && (
-                <tr>
-                  <td colSpan={3} className="p-8 text-center text-zinc-500">暂无询盘数据</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+            ))}
+            {inquiries.length === 0 && (
+              <tr>
+                <td colSpan={3} style={{ padding: '20px', textAlign: 'center' }}>暂无询盘数据</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
