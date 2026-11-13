@@ -1,9 +1,8 @@
 "use client";
 
 export function WhatsAppButton() {
-  const phoneNumber = "8613450864641"; // 你的号码
-  const message = "Hello Helisol, I am interested in your products.";
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  // 直接写死完整链接，中间没有任何空格和加号
+  const whatsappUrl = "https://wa.me/8613450864641?text=Hello%20Helisol%2C%20I%20am%20interested%20in%20your%20products.";
 
   return (
     <a
@@ -23,7 +22,6 @@ export function WhatsAppButton() {
         color: 'white',
         borderRadius: '50%',
         boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)',
-        transition: 'transform 0.3s ease',
         textDecoration: 'none'
       }}
     >
