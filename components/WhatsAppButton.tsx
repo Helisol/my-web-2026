@@ -6,7 +6,8 @@ export function WhatsAppButton() {
 
   return (
     <a
-      href= "_blank"
+  href={whatsappUrl}
+  target="_blank"
       rel="noopener noreferrer"
       style={{
         position: 'fixed',
